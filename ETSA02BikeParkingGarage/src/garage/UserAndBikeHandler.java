@@ -9,20 +9,28 @@ import java.util.Set;
 public class UserAndBikeHandler {
 	private Map<User, Set<Bike>> map;
 	private Set<Integer> barcodes;
+	private Set<Integer> Pincodes;
 
 	public UserAndBikeHandler() {
 		map = new HashMap<User, Set<Bike>>();
 		barcodes = new HashSet<Integer>();
+		Pincodes = new HashSet<Integer>();
 	}
 
-	public boolean put(String name, String id) {
+	public int put(String name, String id) {
 		User user = new User(name, id);
+		Random rand = new Random();
+		int pin = rand.nextInt(1000000);
+		while (Pincodes.contains(pin)) {
+			pin = rand.nextInt(1000000);
+		}
+		user.setPin(pin);
 		if (map.containsKey(user)) {
-			return false;
+			return -1;
 		} else {
 			Set<Bike> bikes = new HashSet<Bike>();
 			map.put(user, bikes);
-			return true;
+			return pin;
 		}
 	}
 
@@ -95,6 +103,10 @@ public class UserAndBikeHandler {
 		return map.containsKey(user);
 	}
 
+	public boolean checkPin(int pin) {
+		return Pincodes.contains(pin);
+	}
+	
 	public boolean checkIfFull(User user) {
 		Set<Bike> set = map.get(user);
 		if (set.size() > 3) {

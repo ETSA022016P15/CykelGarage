@@ -111,9 +111,9 @@ public class BicycleGarageApplication extends Application {
 				if (toBeAdded[0].equals("")) {
 					textArea.setText("Please enter a name along with the ID");
 				} else {
-					boolean added = userAndBikeHandler.put(toBeAdded[0], toBeAdded[1]);
-					if (added) {
-						textArea.setText(toBeAdded[0] + ", ID: " + toBeAdded[1] + ", has been added.");
+					int PIN = userAndBikeHandler.put(toBeAdded[0], toBeAdded[1]);
+					if (PIN > 0) {
+						textArea.setText(toBeAdded[0] + ", ID: " + toBeAdded[1] + ", has been added and been assigned the PIN code " + PIN);
 					} else {
 						textArea.setText(toBeAdded[0] + ", ID: " + toBeAdded[1] + ", already exists in the registry.");
 					}
@@ -149,9 +149,8 @@ public class BicycleGarageApplication extends Application {
 												+ user.getName() + ", ID: " + user.getId() + ".");
 							} else {
 								if (userAndBikeHandler.checkIfFull(user)) {
-									textArea.setText(
-											"The user "
-													+ user.getName() + ", ID: " + user.getId() + ", already has the maximum amount of registered bikes.");
+									textArea.setText("The user " + user.getName() + ", ID: " + user.getId()
+											+ ", already has the maximum amount of registered bikes.");
 								} else {
 									textArea.setText(
 											"The bike with the frame number " + frameNbr + " is already registered to "
@@ -217,13 +216,13 @@ public class BicycleGarageApplication extends Application {
 							String frameNbr = result2.get();
 							boolean removed = userAndBikeHandler.removeBike(user, frameNbr);
 							if (removed) {
-								textArea.setText(
-										"The bike with the frame number " + frameNbr + " has been removed from the user "
-												+ user.getName() + ", ID: " + user.getId() + ".");
+								textArea.setText("The bike with the frame number " + frameNbr
+										+ " has been removed from the user " + user.getName() + ", ID: " + user.getId()
+										+ ".");
 							} else {
-								textArea.setText(
-										"The bike with the frame number " + frameNbr + " was not found in the register belonging to "
-												+ user.getName() + ", ID: " + user.getId() + ".");
+								textArea.setText("The bike with the frame number " + frameNbr
+										+ " was not found in the register belonging to " + user.getName() + ", ID: "
+										+ user.getId() + ".");
 							}
 						} else {
 							textArea.setText("Please enter a frame number.");
@@ -255,7 +254,8 @@ public class BicycleGarageApplication extends Application {
 				}
 				textArea.setText(sb.toString());
 			} else {
-				textArea.setText("The contact " + inputUser[0] + ", ID: " + inputUser[1] + ", was not found in the phone book.");
+				textArea.setText(
+						"The contact " + inputUser[0] + ", ID: " + inputUser[1] + ", was not found in the phone book.");
 			}
 		}
 	}
@@ -267,7 +267,8 @@ public class BicycleGarageApplication extends Application {
 			String barcode = result.get();
 			User owner = userAndBikeHandler.findOwner(barcode);
 			if (owner != null) {
-				textArea.setText("The bike with barcode " + barcode + " belongs to: " + owner.getName() + ", ID: " + owner.getId());
+				textArea.setText("The bike with barcode " + barcode + " belongs to: " + owner.getName() + ", ID: "
+						+ owner.getId());
 			} else {
 				textArea.setText("The barcode " + barcode + " was not found in the registry.");
 			}

@@ -3,10 +3,15 @@ package garage;
 public class User {
 	private String name;
 	private String id;
+	private int pin;
 	
 	public User(String name, String id) {
 		this.name = name;
 		this.id = id;
+	}
+	
+	public void setPin(int pin) {
+		this.pin = pin;
 	}
 	
 	public String getName() {
@@ -23,6 +28,10 @@ public class User {
 		} else {
 			return false;
 		}
+	}
+	
+	public int getPin() {
+		return pin;
 	}
 	
 	public int hashCode() {
