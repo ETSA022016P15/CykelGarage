@@ -32,7 +32,7 @@ public class HardwareManager {
 		}
 	}
 	
-	private class pinTerminalObserver implements PincodeObserver {
+	private class PincodeTerminalObserver implements PincodeObserver {
 		ArrayList<Character> list = new ArrayList<Character>();
 		Long startTime = null;
 		
