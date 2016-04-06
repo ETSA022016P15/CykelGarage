@@ -31,10 +31,46 @@ public class HardwareManager {
 		}
 	}
 	
-	private class PincodeTerminalObserver implements PincodeObserver {
+	private class pinTerminalObserver implements PincodeObserver {
+		ArrayList<Character> list = new ArrayList<Character>();
+		Long startTime = null;
+		
 		@Override
 		public void handleCharacter(char c) {
-			// TODO Auto-generated method stub
+			list.add(c);
+	
+			if(startTime == null){
+				startTime = System.currentTimeMillis();
+			}
+			
+			if(System.currentTimeMillis() - startTime > 3000){
+				terminal.lightLED(0, 1);
+				list.clear();
+				startTime = null;
+			}
+			if(c == '#'){
+				terminal.lightLED(0, 1);
+				list.clear();
+				startTime = null;
+			}
+			
+			if(c == '*'){
+				list.remove(list.size()-1);
+				if(list.size() >= 1){
+					list.remove(list.size()-1);
+				}else{
+					terminal.lightLED(0, 1);
+				}
+			}
+			
+			startTime = System.currentTimeMillis();
+			if(list.size() == 5){
+				//metod för att kolla pincode
+				System.out.println(list);
+				list.clear();
+				terminal.lightLED(1, 2);
+				startTime = null;
+			}
 			
 		}
 	}
