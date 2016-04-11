@@ -84,19 +84,25 @@ public class BicycleGarageApplication extends Application {
 		menuFindOwner.setOnAction(e -> findOwner());
 		final MenuItem menuFindBarcode = new MenuItem("Find barcode");
 		menuFindBarcode.setOnAction(e -> findBarcode());
-		menuFind.getItems().addAll(menuFindBikes, menuFindOwner, menuFindBarcode);
+		final MenuItem menuFindPincode = new MenuItem("Find pincode");
+		menuFindPincode.setOnAction(e -> findPincode());
+		menuFind.getItems().addAll(menuFindBikes, menuFindOwner, menuFindBarcode, menuFindPincode);
 
 		final Menu menuView = new Menu("View");
-		final MenuItem menuShowAll = new MenuItem("Show all");
+		final MenuItem menuShowAll = new MenuItem("Show all users");
 		menuShowAll.setOnAction(e -> showAll());
-		final MenuItem menuShowLog = new MenuItem("Show log");
-		menuShowLog.setOnAction(e -> showLog());
-		menuView.getItems().addAll(menuShowLog);
+		final MenuItem menuShowUserLog = new MenuItem("Show log for user");
+		menuShowUserLog.setOnAction(e -> showUserLog());
+		final MenuItem menuShowBikeLog = new MenuItem("Show log for bike");
+		menuShowBikeLog.setOnAction(e -> showBikeLog());
+		menuView.getItems().addAll(menuShowAll, menuShowUserLog, menuShowBikeLog);
 
 		MenuBar menuBar = new MenuBar();
 		menuBar.getMenus().addAll(menuEdit, menuFind, menuView);
 		return menuBar;
 	}
+
+	
 
 	private void addUser() {
 		String[] labels = new String[2];
@@ -275,15 +281,48 @@ public class BicycleGarageApplication extends Application {
 			}
 		}
 	}
-
-	private Object showAll() {
-		// TODO Auto-generated method stub
-		return null;
+	
+	private void findPincode() {
+		String[] labels = new String[2];
+		labels[0] = "Name";
+		labels[1] = "ID";
+		Optional<String[]> result = twoInputsDialog("Find bikes",
+				"Enter the name and ID of the person whose bikes you would like to see.", labels);
+		if (result.isPresent() && result.get().length != 0) {
+			String[] inputUser = result.get();
+			if (inputUser.length == 1) {
+				textArea.setText("Please enter an ID along with the name.");
+			} else {
+				if (inputUser[0].equals("")) {
+					textArea.setText("Please enter a name along with the ID");
+				} else {
+					String pin = DatabaseInterface.findPincode(inputUser[0], inputUser[1]);
+					if (pin != null) {
+						textArea.setText("The pincode for user " + inputUser[0] + ", ID: " + inputUser[1] + ", is: " + pin + ".");
+					} else {
+						textArea.setText("The user " + inputUser[0] + ", ID: " + inputUser[1] + ", was not found in the registry.");
+					}
+				}
+			}
+		}
+	}
+	
+	//Är denna verkligen nödvändig? Den tar tid som fan att exekvera av någon anledning...
+	private void showAll() {
+		String users = DatabaseInterface.getAllUsers();
+		if (users != null) {
+			textArea.setText("The following users are in the registry:\n" + "Name:\tID:\tPIN:" + users);
+		} else {
+			textArea.setText("There are no registered users.");
+		}	
 	}
 
-	private Object showLog() {
-		// TODO Auto-generated method stub
-		return null;
+	private void showUserLog() {
+		// TODO Show the log for a specific user between two timestamps
+	}
+
+	private void showBikeLog() {
+		// TODO Show the log for a specific bike between two timestamps
 	}
 
 	private Optional<String> oneInputDialog(String title, String headerText, String label) {
